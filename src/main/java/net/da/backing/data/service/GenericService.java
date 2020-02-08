@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
+import javax.transaction.Transactional;
 import net.da.backing.data.dao.hibernate.IGeneralDAO;
 import net.da.backing.data.search.ExampleOptions;
 import net.da.backing.data.search.Filter;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @param <T>
  * @param <ID>
  */
+@Transactional
 public class GenericService<T extends Serializable, ID extends Serializable> 
         extends BaseService
         implements IGenericService<T, ID>{

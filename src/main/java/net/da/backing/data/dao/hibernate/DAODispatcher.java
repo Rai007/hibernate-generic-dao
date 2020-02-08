@@ -314,16 +314,16 @@ public class DAODispatcher extends BaseDAODispatcher implements IGeneralDAO {
 
     @Override
     public List search(ISearch search) {
-            Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).search(search);
-                    } else {
-                            return (List) callMethod(specificDAO, "search", search);
-                    }
+        Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).search(search);
             } else {
-                    return generalDAO.search(search);
+                return (List) callMethod(specificDAO, "search", search);
             }
+        } else {
+            return generalDAO.search(search);
+        }
     }
 
     @Override
