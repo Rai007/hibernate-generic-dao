@@ -63,10 +63,12 @@ public class JPAAnnotationMetadata implements Metadata {
 		return md;
 	}
 
+        @Override
 	public Class<?> getCollectionClass() {
 		return null;
 	}
 	
+        @Override
 	public String getEntityName() {
 		Entity annotation = klass.getAnnotation(Entity.class);
 		if (annotation == null) {
@@ -80,6 +82,7 @@ public class JPAAnnotationMetadata implements Metadata {
 		}
 	}
 
+        @Override
 	public String getIdProperty() {
 		for (Property prop : getProps().values()) {
 			if (prop.hasAnnotation(Id.class) || prop.hasAnnotation(EmbeddedId.class)) {
@@ -89,6 +92,7 @@ public class JPAAnnotationMetadata implements Metadata {
 		return null;
 	}
 
+        @Override
 	public Metadata getIdType() {
 		String idProp = getIdProperty();
 		if (idProp != null) {
@@ -97,6 +101,7 @@ public class JPAAnnotationMetadata implements Metadata {
 		return null;
 	}
 
+        @Override
 	public Serializable getIdValue(Object object) {
 		String idProp = getIdProperty();
 		if (idProp != null) {
@@ -105,10 +110,12 @@ public class JPAAnnotationMetadata implements Metadata {
 		return null;
 	}
 
+        @Override
 	public Class<?> getJavaClass() {
 		return klass;
 	}
 
+        @Override
 	public String[] getProperties() {
 		String[] array = new String[getProps().size()];
 		int i = 0;
@@ -118,6 +125,7 @@ public class JPAAnnotationMetadata implements Metadata {
 		return array;
 	}
 
+        @Override
 	public Metadata getPropertyType(String property) {
 		Property prop = getProps().get(property);
 		if (prop == null)
@@ -125,6 +133,7 @@ public class JPAAnnotationMetadata implements Metadata {
 		return getMetadata(prop.getType());
 	}
 
+        @Override
 	public Object getPropertyValue(Object object, String property) {
 		Property prop = getProps().get(property);
 		if (prop == null)
@@ -132,22 +141,27 @@ public class JPAAnnotationMetadata implements Metadata {
 		return prop.getValue(object);
 	}
 
+        @Override
 	public boolean isCollection() {
 		return false;
 	}
 
+        @Override
 	public boolean isEmbeddable() {
 		return null != klass.getAnnotation(Embeddable.class);
 	}
 
+        @Override
 	public boolean isEntity() {
 		return null != klass.getAnnotation(Entity.class);
 	}
 
+        @Override
 	public boolean isNumeric() {
 		return Number.class.isAssignableFrom(klass);
 	}
 
+        @Override
 	public boolean isString() {
 		return String.class.equals(klass);
 	}
@@ -158,7 +172,7 @@ public class JPAAnnotationMetadata implements Metadata {
 		if (props != null)
 			return props;
 
-		props = new TreeMap<String, Property>();
+		props = new TreeMap<>();
 		
 		if (!isEntity() && !isEmbeddable())
 			return props; //Will have no persistable properties.
@@ -269,11 +283,7 @@ public class JPAAnnotationMetadata implements Metadata {
 				} else if (field != null) {
 					return field.get(o);
 				}
-			} catch (IllegalArgumentException e) {
-				throw new RuntimeException("Unexpected error getting value of property");
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Unexpected error getting value of property");
-			} catch (InvocationTargetException e) {
+			} catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
 				throw new RuntimeException("Unexpected error getting value of property");
 			}
 			return null;

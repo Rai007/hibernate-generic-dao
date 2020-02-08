@@ -9,10 +9,12 @@ import net.da.backing.data.search.MetadataUtil;
 
 public class JPAAnnotationMetadataUtil implements MetadataUtil {
 
+        @Override
 	public Metadata get(Class<?> klass) throws IllegalArgumentException {
 		return JPAAnnotationMetadata.getMetadata(klass);
 	}
 
+        @Override
 	public Metadata get(Class<?> rootEntityClass, String propertyPath) throws IllegalArgumentException {
 		Metadata md = get(rootEntityClass);
 		if (propertyPath == null || propertyPath.equals("")) {
@@ -31,11 +33,13 @@ public class JPAAnnotationMetadataUtil implements MetadataUtil {
 		}
 	}
 
+        @Override
 	public Serializable getId(Object object) {
 		Metadata md = get(object.getClass());
 		return md.getIdValue(object);
 	}
 
+        @Override
 	public boolean isId(Class<?> rootClass, String propertyPath) {
 		if (propertyPath == null || "".equals(propertyPath))
 			return false;
@@ -61,6 +65,7 @@ public class JPAAnnotationMetadataUtil implements MetadataUtil {
 	}
 
 	@SuppressWarnings("unchecked")
+        @Override
 	public <T> Class<T> getUnproxiedClass(Class<?> klass) {
 		while (klass.getAnnotation(Entity.class) == null) {
 			klass = klass.getSuperclass();
@@ -72,6 +77,7 @@ public class JPAAnnotationMetadataUtil implements MetadataUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
+        @Override
 	public <T> Class<T> getUnproxiedClass(Object entity) {
 		return (Class<T>) getUnproxiedClass(entity.getClass());
 	}

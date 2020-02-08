@@ -411,6 +411,7 @@ public class Search implements IMutableSearch, Serializable {
             SearchUtil.clearFilters(this);
     }
 
+    @Override
     public boolean isDisjunction() {
             return disjunction;
     }

@@ -43,89 +43,109 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 
 	protected Class<T> persistentClass = (Class<T>) DAOUtil.getTypeArguments(GenericDAOImpl.class, this.getClass()).get(0);
 
+        @Override
 	public int count(ISearch search) {
 		if (search == null)
 			search = new Search();
 		return _count(persistentClass, search);
 	}
 
+        @Override
 	public T find(ID id) {
 		return _find(persistentClass, id);
 	}
 
+        @Override
 	public T[] find(ID... ids) {
 		return _find(persistentClass, ids);
 	}
 
+        @Override
 	public List<T> findAll() {
 		return _all(persistentClass);
 	}
 
+        @Override
 	public void flush() {
 		_flush();
 	}
 
+        @Override
 	public T getReference(ID id) {
 		return _getReference(persistentClass, id);
 	}
 
+        @Override
 	public T[] getReferences(ID... ids) {
 		return _getReferences(persistentClass, ids);
 	}
 
+        @Override
 	public boolean isAttached(T entity) {
 		return _contains(entity);
 	}
 
+        @Override
 	public void refresh(T... entities) {
 		_refresh(entities);
 	}
 
+        @Override
 	public boolean remove(T entity) {
 		return _removeEntity(entity);
 	}
 
+        @Override
 	public void remove(T... entities) {
 		_removeEntities((Object[]) entities);
 	}
 
+        @Override
 	public boolean removeById(ID id) {
 		return _removeById(persistentClass, id);
 	}
 
+        @Override
 	public void removeByIds(ID... ids) {
 		_removeByIds(persistentClass, ids);
 	}
 
+        @Override
 	public T merge(T entity) {
 		return _merge(entity);
 	}
 
+        @Override
 	public T[] merge(T... entities) {
 		return _merge(persistentClass, entities);
 	}
 
+        @Override
 	public void persist(T... entities) {
 		_persist(entities);
 	}
 	
+        @Override
 	public T save(T entity) {
 		return _persistOrMerge(entity);
 	}
 
+        @Override
 	public T[] save(T... entities) {
 		return _persistOrMerge(persistentClass, entities);
 	}
 
+        @Override
 	public <RT> List<RT> search(ISearch search) {
 		if (search == null)
 			return (List<RT>) findAll();
 		return _search(persistentClass, search);
 	}
 
+        @Override
 	public <RT> SearchResult<RT> searchAndCount(ISearch search) {
 		if (search == null) {
-			SearchResult<RT> result = new SearchResult<RT>();
+			SearchResult<RT> result = new SearchResult<>();
 			result.setResult((List<RT>) findAll());
 			result.setTotalCount(result.getResult().size());
 			return result;
@@ -133,14 +153,17 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		return _searchAndCount(persistentClass, search);
 	}
 
+        @Override
 	public <RT> RT searchUnique(ISearch search) {
 		return (RT) _searchUnique(persistentClass, search);
 	}
 
+        @Override
 	public Filter getFilterFromExample(T example) {
 		return _getFilterFromExample(example);
 	}
 
+        @Override
 	public Filter getFilterFromExample(T example, ExampleOptions options) {
 		return _getFilterFromExample(example, options);
 	}

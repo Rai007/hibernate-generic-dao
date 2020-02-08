@@ -34,9 +34,9 @@ import net.da.backing.data.search.Metadata;
  */
 public class HibernateNonEntityMetadata implements Metadata {
 
-	private SessionFactory sessionFactory;
-	private Type type;
-	private Class<?> collectionType;
+	private final SessionFactory sessionFactory;
+	private final Type type;
+	private final Class<?> collectionType;
 	
 	public HibernateNonEntityMetadata(SessionFactory sessionFactory, Type type, Class<?> collectionType) {
             this.sessionFactory = sessionFactory;

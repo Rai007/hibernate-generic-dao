@@ -400,20 +400,20 @@ public abstract class BaseSearchProcessor {
             Queue<AliasNode> queue = new LinkedList();
             queue.offer(ctx.aliases.get(ROOT_PATH));
             while (!queue.isEmpty()) {
-                    AliasNode node = queue.poll();
-                    if (node.parent != null) {
-                            sb.append(" left join ");
-                            if (doEagerFetching && node.fetch)
-                                    sb.append("fetch ");
-                            sb.append(node.parent.alias);
-                            sb.append(".");
-                            sb.append(node.property);
-                            sb.append(" as ");
-                            sb.append(node.alias);
-                    }
-                    for (AliasNode child : node.children) {
-                            queue.offer(child);
-                    }
+                AliasNode node = queue.poll();
+                if (node.parent != null) {
+                        sb.append(" left join ");
+                        if (doEagerFetching && node.fetch)
+                                sb.append("fetch ");
+                        sb.append(node.parent.alias);
+                        sb.append(".");
+                        sb.append(node.property);
+                        sb.append(" as ");
+                        sb.append(node.alias);
+                }
+                node.children.forEach((child) -> {
+                    queue.offer(child);
+                });
             }
 
             return sb.toString();
@@ -467,8 +467,8 @@ public abstract class BaseSearchProcessor {
      * @return 
      */
     protected String generateWhereClause(SearchContext ctx, List<Filter> filters, boolean isDisjunction) {
-            String content = null;
-            if (filters == null || filters.size() == 0) {
+            String content ;
+            if (filters == null || filters.isEmpty()) {
                     return "";
             } else if (filters.size() == 1) {
                     content = filterToQL(ctx, filters.get(0));
@@ -1302,7 +1302,7 @@ public abstract class BaseSearchProcessor {
                                             return null;
                                     } else {
                                             List<Filter> list = (List<Filter>) filter.getValue();
-                                            if (list.size() == 0) {
+                                            if (list.isEmpty()) {
                                                     return null;
                                             } else if (list.size() == 1) {
                                                     return list.get(0);

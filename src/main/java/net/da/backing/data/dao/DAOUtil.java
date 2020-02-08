@@ -200,7 +200,7 @@ public class DAOUtil {
     public static Method getMethod(Class<?> klass, String methodName,
                     Class<?>... paramTypes) {
 
-            List<Method> candidates = new ArrayList<Method>();
+            List<Method> candidates = new ArrayList<>();
 
             // NOTE: getMethods() includes inherited methods
             outer: for (Method method : klass.getMethods()) {

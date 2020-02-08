@@ -55,6 +55,7 @@ public class DAODispatcher extends BaseDAODispatcher implements IGeneralDAO {
      * IGeneralDAO has default implementations for the standard DAO methods.
      * Which model class it uses is specified when calling the particular
      * method.
+     * @param generalDAO
      */
     public void setGeneralDAO(IGeneralDAO generalDAO) {
             this.generalDAO = generalDAO;

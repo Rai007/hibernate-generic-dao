@@ -40,7 +40,7 @@ public class SearchUtil {
 
             List<String> fetches = search.getFetches();
             if (fetches == null) {
-                    fetches = new ArrayList<String>();
+                    fetches = new ArrayList<>();
                     search.setFetches(fetches);
             }
             fetches.add(property);
@@ -57,7 +57,7 @@ public class SearchUtil {
     public static void addField(IMutableSearch search, Field field) {
             List<Field> fields = search.getFields();
             if (fields == null) {
-                    fields = new ArrayList<Field>();
+                    fields = new ArrayList<>();
                     search.setFields(fields);
             }
             fields.add(field);
@@ -441,7 +441,7 @@ public class SearchUtil {
 
             List<Sort> sorts = search.getSorts();
             if (sorts == null) {
-                    sorts = new ArrayList<Sort>();
+                    sorts = new ArrayList<>();
                     search.setSorts(sorts);
             }
             sorts.add(sort);
@@ -645,7 +645,7 @@ public class SearchUtil {
     public static void mergeSortsBefore(IMutableSearch search, List<Sort> sorts) {
             List<Sort> list = search.getSorts();
             if (list == null) {
-                    list = new ArrayList<Sort>();
+                    list = new ArrayList<>();
                     search.setSorts(list);
             }
 
@@ -692,7 +692,7 @@ public class SearchUtil {
     public static void mergeSortsAfter(IMutableSearch search, List<Sort> sorts) {
             List<Sort> list = search.getSorts();
             if (list == null) {
-                    list = new ArrayList<Sort>();
+                    list = new ArrayList<>();
                     search.setSorts(list);
             }
 
@@ -739,7 +739,7 @@ public class SearchUtil {
     public static void mergeFetches(IMutableSearch search, List<String> fetches) {
             List<String> list = search.getFetches();
             if (list == null) {
-                    list = new ArrayList<String>();
+                    list = new ArrayList<>();
                     search.setFetches(list);
             }
 
@@ -770,15 +770,15 @@ public class SearchUtil {
     public static void mergeFiltersAnd(IMutableSearch search, List<Filter> filters) {
             List<Filter> list = search.getFilters();
             if (list == null) {
-                    list = new ArrayList<Filter>();
+                    list = new ArrayList<>();
                     search.setFilters(list);
             }
 
-            if (list.size() == 0 || !search.isDisjunction()) {
+            if (list.isEmpty() || !search.isDisjunction()) {
                     search.setDisjunction(false);
                     list.addAll(filters);
             } else {
-                    search.setFilters(new ArrayList<Filter>());
+                    search.setFilters(new ArrayList<>());
 
                     // add the previous filters with an OR
                     Filter orFilter = Filter.or();
@@ -810,11 +810,11 @@ public class SearchUtil {
     public static void mergeFiltersOr(IMutableSearch search, List<Filter> filters) {
             List<Filter> list = search.getFilters();
             if (list == null) {
-                    list = new ArrayList<Filter>();
+                    list = new ArrayList<>();
                     search.setFilters(list);
             }
 
-            if (list.size() == 0 || search.isDisjunction()) {
+            if (list.isEmpty() || search.isDisjunction()) {
                     search.setDisjunction(true);
                     list.addAll(filters);
             } else {
@@ -851,7 +851,7 @@ public class SearchUtil {
     public static void mergeFieldsBefore(IMutableSearch search, List<Field> fields) {
             List<Field> list = search.getFields();
             if (list == null) {
-                    list = new ArrayList<Field>();
+                    list = new ArrayList<>();
                     search.setFields(list);
             }
 
@@ -879,7 +879,7 @@ public class SearchUtil {
     public static void mergeFieldsAfter(IMutableSearch search, List<Field> fields) {
             List<Field> list = search.getFields();
             if (list == null) {
-                    list = new ArrayList<Field>();
+                    list = new ArrayList<>();
                     search.setFields(list);
             }
 
@@ -974,19 +974,19 @@ public class SearchUtil {
     public static <T extends IMutableSearch> T copy(ISearch source, T destination) {
             shallowCopy(source, destination);
 
-            ArrayList<String> fetches = new ArrayList<String>();
+            ArrayList<String> fetches = new ArrayList<>();
             fetches.addAll(source.getFetches());
             destination.setFetches(fetches);
 
-            ArrayList<Field> fields = new ArrayList<Field>();
+            ArrayList<Field> fields = new ArrayList<>();
             fields.addAll(source.getFields());
             destination.setFields(fields);
 
-            ArrayList<Filter> filters = new ArrayList<Filter>();
+            ArrayList<Filter> filters = new ArrayList<>();
             filters.addAll(source.getFilters());
             destination.setFilters(filters);
 
-            ArrayList<Sort> sorts = new ArrayList<Sort>();
+            ArrayList<Sort> sorts = new ArrayList<>();
             sorts.addAll(source.getSorts());
             destination.setSorts(sorts);
 
@@ -1152,7 +1152,7 @@ public class SearchUtil {
                     T result = visitor.visit(item);
                     if (result != item || (removeNulls && result == null)) {
                             if (copy == null) {
-                                    copy = new ArrayList<T>(list.size());
+                                    copy = new ArrayList<>(list.size());
                                     copy.addAll(list);
                             }
                             copy.set(i, result);

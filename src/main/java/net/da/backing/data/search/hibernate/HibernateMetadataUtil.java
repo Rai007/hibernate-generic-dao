@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
-import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxyHelper;
@@ -38,7 +37,7 @@ import net.da.backing.data.search.MetadataUtil;
  */
 public class HibernateMetadataUtil implements MetadataUtil {
 
-    private static Map<SessionFactory, HibernateMetadataUtil> map = new HashMap<SessionFactory, HibernateMetadataUtil>();
+    private static final Map<SessionFactory, HibernateMetadataUtil> map = new HashMap<SessionFactory, HibernateMetadataUtil>();
 
     public static HibernateMetadataUtil getInstanceForSessionFactory(SessionFactory sessionFactory) {
         HibernateMetadataUtil instance = map.get(sessionFactory);

@@ -46,13 +46,7 @@ public class BaseDAODispatcher {
     protected Object callMethod(Object specificDAO, String methodName, Object... args) {
             try {
                     return DAOUtil.callMethod(specificDAO, methodName, args);
-            } catch (IllegalArgumentException e) {
-                    throw new DAODispatcherException(e);
-            } catch (NoSuchMethodException e) {
-                    throw new DAODispatcherException(e);
-            } catch (IllegalAccessException e) {
-                    throw new DAODispatcherException(e);
-            } catch (InvocationTargetException e) {
+            } catch (IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new DAODispatcherException(e);
             }
     }
@@ -60,13 +54,7 @@ public class BaseDAODispatcher {
     protected Object callMethod(Object specificDAO, String methodName, Class<?>[] paramTypes, Object... args) {
             try {
                     return DAOUtil.callMethod(specificDAO, methodName, paramTypes, args);
-            } catch (IllegalArgumentException e) {
-                    throw new DAODispatcherException(e);
-            } catch (NoSuchMethodException e) {
-                    throw new DAODispatcherException(e);
-            } catch (IllegalAccessException e) {
-                    throw new DAODispatcherException(e);
-            } catch (InvocationTargetException e) {
+            } catch (IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new DAODispatcherException(e);
             }
     }

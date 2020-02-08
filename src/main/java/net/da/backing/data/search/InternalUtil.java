@@ -80,25 +80,20 @@ public class InternalUtil {
                             Number num = (Number) value;
 
                             if (type.equals(Double.class)) {
-                                    return new Double(num.doubleValue());
+                                    return num.doubleValue();
                             } else if (type.equals(Float.class)) {
-                                    return new Float(num.floatValue());
+                                    return num.floatValue();
                             } else if (type.equals(Long.class)) {
-                                    return new Long(num.longValue());
+                                    return num.longValue();
                             } else if (type.equals(Integer.class)) {
-                                    return new Integer(num.intValue());
+                                    return num.intValue();
                             } else if (type.equals(Short.class)) {
-                                    return new Short(num.shortValue());
+                                    return num.shortValue();
                             } else {
-                                    try {
-                                            return type.getConstructor(String.class).newInstance(value.toString());
-                                    } catch (IllegalArgumentException e) {
-                                    } catch (SecurityException e) {
-                                    } catch (InstantiationException e) {
-                                    } catch (IllegalAccessException e) {
-                                    } catch (InvocationTargetException e) {
-                                    } catch (NoSuchMethodException e) {
-                                    }
+                                try {
+                                        return type.getConstructor(String.class).newInstance(value.toString());
+                                } catch (IllegalArgumentException | SecurityException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                                }
                             }
                     } else if (value instanceof String) {
                             //the value is a String. attempt to parse the string

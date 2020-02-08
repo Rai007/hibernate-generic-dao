@@ -44,288 +44,313 @@ import net.da.backing.data.search.SearchUtil;
  * @author dwolverton
  */
 public class JPASearchProcessor extends BaseSearchProcessor {
-	private static Logger logger = LoggerFactory.getLogger(JPASearchProcessor.class);
+    private static Logger logger = LoggerFactory.getLogger(JPASearchProcessor.class);
 
-	public JPASearchProcessor(MetadataUtil mdu) {
-		super(QLTYPE_EQL, mdu);
-	}
+    public JPASearchProcessor(MetadataUtil mdu) {
+            super(QLTYPE_EQL, mdu);
+    }
 
-	// --- Public Methods ---
+    // --- Public Methods ---
 
-	/**
-	 * Search for objects based on the search parameters in the specified
-	 * <code>ISearch</code> object.
-	 * 
-	 * @see ISearch
-	 */
-	@SuppressWarnings("unchecked")
-	public List search(EntityManager entityManager, ISearch search) {
-		if (search == null)
-			return null;
+    /**
+     * Search for objects based on the search parameters in the specified
+     * <code>ISearch</code> object.
+     * 
+     * @param entityManager
+     * @param search
+     * @return 
+     * @see ISearch
+     */
+    @SuppressWarnings("unchecked")
+    public List search(EntityManager entityManager, ISearch search) {
+            if (search == null)
+                    return null;
 
-		return search(entityManager, search.getSearchClass(), search);
-	}
+            return search(entityManager, search.getSearchClass(), search);
+    }
 
-	/**
-	 * Search for objects based on the search parameters in the specified
-	 * <code>ISearch</code> object. Uses the specified searchClass, ignoring the
-	 * searchClass specified on the search itself.
-	 * 
-	 * @see ISearch
-	 */
-	@SuppressWarnings("unchecked")
-	public List search(EntityManager entityManager, Class<?> searchClass, ISearch search) {
-		if (searchClass == null || search == null)
-			return null;
+    /**
+     * Search for objects based on the search parameters in the specified
+     * <code>ISearch</code> object.Uses the specified searchClass, ignoring the
+     * searchClass specified on the search itself.
+     * 
+     * @param entityManager
+     * @param searchClass
+     * @param search
+     * @return 
+     * @see ISearch
+     */
+    @SuppressWarnings("unchecked")
+    public List search(EntityManager entityManager, Class<?> searchClass, ISearch search) {
+            if (searchClass == null || search == null)
+                    return null;
 
-		List<Object> paramList = new ArrayList<Object>();
-		String ql = generateQL(searchClass, search, paramList);
-		Query query = entityManager.createQuery(ql);
-		addParams(query, paramList);
-		addPaging(query, search);
+            List<Object> paramList = new ArrayList<>();
+            String ql = generateQL(searchClass, search, paramList);
+            Query query = entityManager.createQuery(ql);
+            addParams(query, paramList);
+            addPaging(query, search);
 
-		return transformResults(query.getResultList(), search);
-	}
+            return transformResults(query.getResultList(), search);
+    }
 
-	/**
-	 * Returns the total number of results that would be returned using the
-	 * given <code>ISearch</code> if there were no paging or maxResult limits.
-	 * 
-	 * @see ISearch
-	 */
-	public int count(EntityManager entityManager, ISearch search) {
-		if (search == null)
-			return 0;
-		return count(entityManager, search.getSearchClass(), search);
-	}
+    /**
+     * Returns the total number of results that would be returned using the
+     * given <code>ISearch</code> if there were no paging or maxResult limits.
+     * 
+     * @param entityManager
+     * @param search
+     * @return 
+     * @see ISearch
+     */
+    public int count(EntityManager entityManager, ISearch search) {
+            if (search == null)
+                    return 0;
+            return count(entityManager, search.getSearchClass(), search);
+    }
 
-	/**
-	 * Returns the total number of results that would be returned using the
-	 * given <code>ISearch</code> if there were no paging or maxResult limits.
-	 * Uses the specified searchClass, ignoring the searchClass specified on the
-	 * search itself.
-	 * 
-	 * @see ISearch
-	 */
-	public int count(EntityManager entityManager, Class<?> searchClass, ISearch search) {
-		if (searchClass == null || search == null)
-			return 0;
+    /**
+     * Returns the total number of results that would be returned using the
+     * given <code>ISearch</code> if there were no paging or maxResult limits.Uses the specified searchClass, ignoring the searchClass specified on the
+     * search itself.
+     *
+     * @param entityManager 
+     * @param searchClass 
+     * @param search 
+     * @return  
+     * @see ISearch
+     */
+    public int count(EntityManager entityManager, Class<?> searchClass, ISearch search) {
+            if (searchClass == null || search == null)
+                    return 0;
 
-		List<Object> paramList = new ArrayList<Object>();
-		String ql = generateRowCountQL(searchClass, search, paramList);
-		if (ql == null) { // special case where the query uses column operators
-			return 1;
-		}
-		Query query = entityManager.createQuery(ql);
-		addParams(query, paramList);
+            List<Object> paramList = new ArrayList<>();
+            String ql = generateRowCountQL(searchClass, search, paramList);
+            if (ql == null) { // special case where the query uses column operators
+                    return 1;
+            }
+            Query query = entityManager.createQuery(ql);
+            addParams(query, paramList);
 
-		return ((Number) query.getSingleResult()).intValue();
-	}
+            return ((Number) query.getSingleResult()).intValue();
+    }
 
-	/**
-	 * Returns a <code>SearchResult</code> object that includes the list of
-	 * results like <code>search()</code> and the total length like
-	 * <code>searchLength</code>.
-	 * 
-	 * @see ISearch
-	 */
-	@SuppressWarnings("unchecked")
-	public SearchResult searchAndCount(EntityManager entityManager, ISearch search) {
-		if (search == null)
-			return null;
-		return searchAndCount(entityManager, search.getSearchClass(), search);
-	}
+    /**
+     * Returns a <code>SearchResult</code> object that includes the list of
+     * results like <code>search()</code> and the total length like
+     * <code>searchLength</code>.
+     * 
+     * @param entityManager
+     * @param search
+     * @return 
+     * @see ISearch
+     */
+    @SuppressWarnings("unchecked")
+    public SearchResult searchAndCount(EntityManager entityManager, ISearch search) {
+            if (search == null)
+                    return null;
+            return searchAndCount(entityManager, search.getSearchClass(), search);
+    }
 
-	/**
-	 * Returns a <code>SearchResult</code> object that includes the list of
-	 * results like <code>search()</code> and the total length like
-	 * <code>searchLength</code>. Uses the specified searchClass, ignoring the
-	 * searchClass specified on the search itself.
-	 * 
-	 * @see ISearch
-	 */
-	@SuppressWarnings("unchecked")
-	public SearchResult searchAndCount(EntityManager entityManager, Class<?> searchClass, ISearch search) {
-		if (searchClass == null || search == null)
-			return null;
+    /**
+     * Returns a <code>SearchResult</code> object that includes the list of
+     * results like <code>search()</code> and the total length like
+     * <code>searchLength</code>.Uses the specified searchClass, ignoring the
+     * searchClass specified on the search itself.
+     * 
+     * @param entityManager
+     * @param searchClass
+     * @param search
+     * @return 
+     * @see ISearch
+     */
+    @SuppressWarnings("unchecked")
+    public SearchResult searchAndCount(EntityManager entityManager, Class<?> searchClass, ISearch search) {
+            if (searchClass == null || search == null)
+                    return null;
 
-		SearchResult result = new SearchResult();
-		result.setResult(search(entityManager, searchClass, search));
+            SearchResult result = new SearchResult();
+            result.setResult(search(entityManager, searchClass, search));
 
-		if (search.getMaxResults() > 0) {
-			result.setTotalCount(count(entityManager, searchClass, search));
-		} else {
-			result.setTotalCount(result.getResult().size() + SearchUtil.calcFirstResult(search));
-		}
+            if (search.getMaxResults() > 0) {
+                    result.setTotalCount(count(entityManager, searchClass, search));
+            } else {
+                    result.setTotalCount(result.getResult().size() + SearchUtil.calcFirstResult(search));
+            }
 
-		return result;
-	}
+            return result;
+    }
 
-	/**
-	 * Search for a single result using the given parameters.
-	 */
-	public Object searchUnique(EntityManager entityManager, ISearch search) throws NonUniqueResultException {
-		if (search == null)
-			return null;
-		return searchUnique(entityManager, search.getSearchClass(), search);
-	}
+    /**
+     * Search for a single result using the given parameters.
+     * @param entityManager
+     * @param search
+     * @return 
+     */
+    public Object searchUnique(EntityManager entityManager, ISearch search) throws NonUniqueResultException {
+            if (search == null)
+                    return null;
+            return searchUnique(entityManager, search.getSearchClass(), search);
+    }
 
-	/**
-	 * Search for a single result using the given parameters. Uses the specified
-	 * searchClass, ignoring the searchClass specified on the search itself.
-	 */
-	public Object searchUnique(EntityManager entityManager, Class<?> entityClass, ISearch search)
-			throws NonUniqueResultException {
-		if (search == null)
-			return null;
+    /**
+     * Search for a single result using the given parameters.Uses the specified
+     * searchClass, ignoring the searchClass specified on the search itself.
+     * @param entityManager
+     * @param entityClass
+     * @param search
+     * @return 
+     */
+    public Object searchUnique(EntityManager entityManager, Class<?> entityClass, ISearch search)
+                    throws NonUniqueResultException {
+            if (search == null)
+                    return null;
 
-		List<Object> paramList = new ArrayList<Object>();
-		String ql = generateQL(entityClass, search, paramList);
-		Query query = entityManager.createQuery(ql);
-		addParams(query, paramList);
-		addPaging(query, search);
-		try {
-			return transformResult(query.getSingleResult(), search);
-		} catch (NoResultException ex) {
-			return transformResult(null, search);
-		}
-	}
+            List<Object> paramList = new ArrayList<>();
+            String ql = generateQL(entityClass, search, paramList);
+            Query query = entityManager.createQuery(ql);
+            addParams(query, paramList);
+            addPaging(query, search);
+            try {
+                    return transformResult(query.getSingleResult(), search);
+            } catch (NoResultException ex) {
+                    return transformResult(null, search);
+            }
+    }
 
-	// ---- SEARCH HELPERS ---- //
+    // ---- SEARCH HELPERS ---- //
 
-	private void addParams(Query query, List<Object> params) {
-		StringBuilder debug = null;
+    private void addParams(Query query, List<Object> params) {
+            StringBuilder debug = null;
 
-		int i = 1;
-		for (Object o : params) {
-			if (logger.isDebugEnabled()) {
-				if (debug == null)
-					debug = new StringBuilder();
-				else
-					debug.append("\n\t");
-				debug.append("p");
-				debug.append(i);
-				debug.append(": ");
-				debug.append(InternalUtil.paramDisplayString(o));
-			}
-			query.setParameter("p" + Integer.toString(i++), o);
-		}
-		if (debug != null && debug.length() != 0) {
-			logger.debug(debug.toString());
-		}
-	}
+            int i = 1;
+            for (Object o : params) {
+                    if (logger.isDebugEnabled()) {
+                            if (debug == null)
+                                    debug = new StringBuilder();
+                            else
+                                    debug.append("\n\t");
+                            debug.append("p");
+                            debug.append(i);
+                            debug.append(": ");
+                            debug.append(InternalUtil.paramDisplayString(o));
+                    }
+                    query.setParameter("p" + Integer.toString(i++), o);
+            }
+            if (debug != null && debug.length() != 0) {
+                    logger.debug(debug.toString());
+            }
+    }
 
-	private void addPaging(Query query, ISearch search) {
-		int firstResult = SearchUtil.calcFirstResult(search);
-		if (firstResult > 0) {
-			query.setFirstResult(firstResult);
-		}
-		if (search.getMaxResults() > 0) {
-			query.setMaxResults(search.getMaxResults());
-		}
-	}
+    private void addPaging(Query query, ISearch search) {
+            int firstResult = SearchUtil.calcFirstResult(search);
+            if (firstResult > 0) {
+                    query.setFirstResult(firstResult);
+            }
+            if (search.getMaxResults() > 0) {
+                    query.setMaxResults(search.getMaxResults());
+            }
+    }
 
-	@SuppressWarnings("unchecked")
-	private Object transformResult(Object result, ISearch search) {
-		List results = new ArrayList(1);
-		results.add(result);
-		return transformResults(results, search).get(0);
-	}
+    @SuppressWarnings("unchecked")
+    private Object transformResult(Object result, ISearch search) {
+            List results = new ArrayList(1);
+            results.add(result);
+            return transformResults(results, search).get(0);
+    }
 
-	@SuppressWarnings("unchecked")
-	private List transformResults(List results, ISearch search) {
-		if (results.size() == 0)
-			return results;
+    @SuppressWarnings("unchecked")
+    private List transformResults(List results, ISearch search) {
+            if (results.isEmpty())
+                    return results;
 
-		int resultMode = search.getResultMode();
-		if (resultMode == ISearch.RESULT_AUTO) {
-			int count = 0;
-			Iterator<Field> fieldItr = search.getFields().iterator();
-			while (fieldItr.hasNext()) {
-				Field field = fieldItr.next();
-				if (field.getKey() != null && !field.getKey().equals("")) {
-					resultMode = ISearch.RESULT_MAP;
-					break;
-				}
-				count++;
-			}
-			if (resultMode == ISearch.RESULT_AUTO) {
-				if (count > 1)
-					resultMode = ISearch.RESULT_ARRAY;
-				else
-					resultMode = ISearch.RESULT_SINGLE;
-			}
-		}
+            int resultMode = search.getResultMode();
+            if (resultMode == ISearch.RESULT_AUTO) {
+                    int count = 0;
+                    Iterator<Field> fieldItr = search.getFields().iterator();
+                    while (fieldItr.hasNext()) {
+                            Field field = fieldItr.next();
+                            if (field.getKey() != null && !field.getKey().equals("")) {
+                                    resultMode = ISearch.RESULT_MAP;
+                                    break;
+                            }
+                            count++;
+                    }
+                    if (resultMode == ISearch.RESULT_AUTO) {
+                            if (count > 1)
+                                    resultMode = ISearch.RESULT_ARRAY;
+                            else
+                                    resultMode = ISearch.RESULT_SINGLE;
+                    }
+            }
 
-		switch (resultMode) {
-		case ISearch.RESULT_ARRAY:
-			if (!(results.get(0) instanceof Object[])) {
-				List<Object[]> rArray = new ArrayList<Object[]>(results.size());
-				for (Object result : results) {
-					rArray.add(new Object[] { result });
-				}
-				return rArray;
-			} else {
-				return results;
-			}
-		case ISearch.RESULT_LIST:
-			List<List> rList = new ArrayList<List>(results.size());
-			if (results.get(0) instanceof Object[]) {
-				for (Object[] result : (List<Object[]>) results) {
-					List list = new ArrayList(result.length);
-					for (Object o : result) {
-						list.add(o);
-					}
-					rList.add(list);
-				}
-			} else {
-				for (Object result : results) {
-					List list = new ArrayList(1);
-					list.add(result);
-					rList.add(list);
-				}
-			}
-			return rList;
-		case ISearch.RESULT_MAP:
-			List<String> keyList = new ArrayList<String>();
-			Iterator<Field> fieldItr = search.getFields().iterator();
-			while (fieldItr.hasNext()) {
-				Field field = fieldItr.next();
-				if (field.getKey() != null && !field.getKey().equals("")) {
-					keyList.add(field.getKey());
-				} else {
-					keyList.add(field.getProperty());
-				}
-			}
+            switch (resultMode) {
+            case ISearch.RESULT_ARRAY:
+                    if (!(results.get(0) instanceof Object[])) {
+                            List<Object[]> rArray = new ArrayList<>(results.size());
+                            results.forEach((result) -> {
+                                rArray.add(new Object[] { result });
+                            });
+                            return rArray;
+                    } else {
+                            return results;
+                    }
+            case ISearch.RESULT_LIST:
+                    List<List> rList = new ArrayList<List>(results.size());
+                    if (results.get(0) instanceof Object[]) {
+                            for (Object[] result : (List<Object[]>) results) {
+                                    List list = new ArrayList(result.length);
+                                    list.addAll(Arrays.asList(result));
+                                    rList.add(list);
+                            }
+                    } else {
+                            for (Object result : results) {
+                                    List list = new ArrayList(1);
+                                    list.add(result);
+                                    rList.add(list);
+                            }
+                    }
+                    return rList;
+            case ISearch.RESULT_MAP:
+                    List<String> keyList = new ArrayList<String>();
+                    Iterator<Field> fieldItr = search.getFields().iterator();
+                    while (fieldItr.hasNext()) {
+                            Field field = fieldItr.next();
+                            if (field.getKey() != null && !field.getKey().equals("")) {
+                                    keyList.add(field.getKey());
+                            } else {
+                                    keyList.add(field.getProperty());
+                            }
+                    }
 
-			List<Map<String, Object>> rMap = new ArrayList<Map<String, Object>>(results.size());
-			if (results.get(0) instanceof Object[]) {
-				for (Object[] result : (List<Object[]>) results) {
-					Map<String, Object> map = new HashMap<String, Object>();
-					for (int i = 0; i < keyList.size(); i++) {
-						String key = keyList.get(i);
-						if (key != null) {
-							map.put(key, result[i]);
-						}
-					}
-					rMap.add(map);
-				}
-			} else if (keyList.size() == 1) {
-				for (Object result : results) {
-					Map<String, Object> map = new HashMap<String, Object>();
-					;
-					if (keyList.get(0) != null)
-						map.put(keyList.get(0), result);
-					rMap.add(map);
-				}
-			} else {
-				throw new RuntimeException(
-						"Unexpected condition: a single object was returned from the query for each record, but the Search expects multiple.");
-			}
+                    List<Map<String, Object>> rMap = new ArrayList<Map<String, Object>>(results.size());
+                    if (results.get(0) instanceof Object[]) {
+                            for (Object[] result : (List<Object[]>) results) {
+                                    Map<String, Object> map = new HashMap<String, Object>();
+                                    for (int i = 0; i < keyList.size(); i++) {
+                                            String key = keyList.get(i);
+                                            if (key != null) {
+                                                    map.put(key, result[i]);
+                                            }
+                                    }
+                                    rMap.add(map);
+                            }
+                    } else if (keyList.size() == 1) {
+                            for (Object result : results) {
+                                    Map<String, Object> map = new HashMap<String, Object>();
+                                    
+                                    if (keyList.get(0) != null)
+                                            map.put(keyList.get(0), result);
+                                    rMap.add(map);
+                            }
+                    } else {
+                            throw new RuntimeException(
+                                            "Unexpected condition: a single object was returned from the query for each record, but the Search expects multiple.");
+                    }
 
-			return rMap;
-		default: // ISearch.RESULT_SINGLE
-			return results;
-		}
-	}
+                    return rMap;
+            default: // ISearch.RESULT_SINGLE
+                    return results;
+            }
+    }
 }

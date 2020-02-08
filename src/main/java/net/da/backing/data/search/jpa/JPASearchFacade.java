@@ -54,45 +54,55 @@ public class JPASearchFacade implements SearchFacade {
 	}
 
 	@SuppressWarnings("unchecked")
+        @Override
 	public List search(ISearch search) {
 		return processor.search(entityManager, search);
 	}
 
 	@SuppressWarnings("unchecked")
+        @Override
 	public List search(Class<?> searchClass, ISearch search) {
 		return processor.search(entityManager, searchClass, search);
 	}
 
+        @Override
 	public int count(ISearch search) {
 		return processor.count(entityManager, search);
 	}
 
+        @Override
 	public int count(Class<?> searchClass, ISearch search) {
 		return processor.count(entityManager, searchClass, search);
 	}
 
 	@SuppressWarnings("unchecked")
+        @Override
 	public SearchResult searchAndCount(ISearch search) {
 		return processor.searchAndCount(entityManager, search);
 	}
 
 	@SuppressWarnings("unchecked")
+        @Override
 	public SearchResult searchAndCount(Class<?> searchClass, ISearch search) {
 		return processor.searchAndCount(entityManager, searchClass, search);
 	}
 
+        @Override
 	public Object searchUnique(ISearch search) {
 		return processor.searchUnique(entityManager, search);
 	}
 
+        @Override
 	public Object searchUnique(Class<?> searchClass, ISearch search) {
 		return processor.searchUnique(entityManager, searchClass, search);
 	}
 
+        @Override
 	public Filter getFilterFromExample(Object example) {
 		return processor.getFilterFromExample(example);
 	}
 
+        @Override
 	public Filter getFilterFromExample(Object example, ExampleOptions options) {
 		return processor.getFilterFromExample(example, options);
 	}

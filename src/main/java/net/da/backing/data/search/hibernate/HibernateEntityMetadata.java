@@ -32,9 +32,9 @@ import net.da.backing.data.search.Metadata;
  */
 public class HibernateEntityMetadata implements Metadata {
 
-    private SessionFactory sessionFactory;
-    private ClassMetadata metadata;
-    private Class<?> collectionType;
+    private final SessionFactory sessionFactory;
+    private final ClassMetadata metadata;
+    private final Class<?> collectionType;
 
     public HibernateEntityMetadata(SessionFactory sessionFactory, ClassMetadata classMetadata, Class<?> collectionType) {
         this.sessionFactory = sessionFactory;

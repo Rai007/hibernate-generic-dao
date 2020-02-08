@@ -32,7 +32,7 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements Pro
 
 The following methods (and several more) are now available on ProjectDAO
 
-```
+```java
 Project project = projectDAO.find(projectId);
 
 List<Project> list = projectDAO.findAll();
@@ -62,7 +62,7 @@ int avgProjectRating = (Integer) prjoectDAO.searchUnique(search);
 
 A GeneralDAO is also provided with DAO methods for any entity:
 
-```
+```java
 public interface GeneralDAO {
 
         public <T> T find(Class<T> type, Serializable id);
@@ -109,7 +109,7 @@ public interface GeneralDAO {
 
 Search DTO usage examples
 
-```
+```java
 Search search = new Search(Project.class);
 
 //filtering
@@ -215,7 +215,7 @@ Sample Projects As we all know, an example is worth 1000 wiki pages, so we have 
 
 Details and Tips Hibernate session strategy By default the DAOs and SearchFacade use  SessionFactory.getCurrentSession() to get the session to use. However,  you can change this behavior by overriding the protected getSession()  method of a DAO. For example if you want to set the session manually,  you could write something like this.
 
-```
+```java
 public class MyBaseGenericDAOImpl<T, ID extends Serializable> extends GenericDAOImpl<T, ID> implements AddressDAO {
         private Session session;
         

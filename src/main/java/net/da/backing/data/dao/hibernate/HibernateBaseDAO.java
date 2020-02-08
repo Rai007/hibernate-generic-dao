@@ -214,13 +214,13 @@ public class HibernateBaseDAO {
         }
 
         // if it has an id and is not contained in the session, it may exist
-        Map<Class<?>, List<Integer>> mayExist = new HashMap<Class<?>, List<Integer>>();
+        Map<Class<?>, List<Integer>> mayExist = new HashMap<>();
         for (int i = 0; i < entities.length; i++) {
             if (exists[i] == null) {
                 Class<?> entityClass = metadataUtil.getUnproxiedClass(entities[i]); //Get the real entity class
                 List<Integer> l = mayExist.get(entityClass);
                 if (l == null) {
-                    l = new ArrayList<Integer>();
+                    l = new ArrayList<>();
                     mayExist.put(entityClass, l);
                 }
                 l.add(i);
