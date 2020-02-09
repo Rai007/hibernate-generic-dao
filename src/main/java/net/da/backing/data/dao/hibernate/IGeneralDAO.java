@@ -115,7 +115,7 @@ public interface IGeneralDAO {
      * @param entity
      * @return <code>true</code> if create; <code>false</code> if update.
      */
-    public boolean save(Object entity);
+    public boolean saveOrUpdateIsNew(Object entity);
 
     /**
      * <p>
@@ -132,8 +132,17 @@ public interface IGeneralDAO {
      * @param entities
      * @return 
      */
-    public boolean[] save(Object... entities);
+    public boolean[] saveOrUpdateIsNew(Object... entities);
 
+    
+    /**
+     * Update a entity
+     * 
+     * @param entity
+     */
+    public void update(Object entity);
+    
+    
     /**
      * Remove the specified entity from the datastore.
      * 

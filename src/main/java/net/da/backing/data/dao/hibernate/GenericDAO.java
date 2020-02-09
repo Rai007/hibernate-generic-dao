@@ -131,17 +131,23 @@ public class GenericDAO<T, ID extends Serializable> extends
 	}
 
         @Override
-	public boolean save(T entity) {
+	public boolean saveOrUpdateIsNew(T entity) {
             debug("Save entity type[{}].", persistentClass);
             return _saveOrUpdateIsNew(entity);
 	}
 
         @Override
-	public boolean[] save(T... entities) {
+	public boolean[] saveOrUpdateIsNew(T... entities) {
             debug("Save entities type[{}].", persistentClass);
             return _saveOrUpdateIsNew(entities);
 	}
 
+        @Override
+        public void update(T entity) {
+            debug("Save entity type {}.", persistentClass);
+            _update(entity);
+        }
+        
         @Override
 	public <RT> List<RT> search(ISearch search) {
             debug("Count type[{}] of search.", persistentClass);

@@ -64,17 +64,23 @@ public class GenericService<T extends Serializable, ID extends Serializable>
     }
 
     @Override
-    public boolean save(T entity) {
+    public boolean saveOrUpdateIsNew(T entity) {
         debug("Save entity type[{}].", getClassOfT());
-        return generalDAO.save(entity);
+        return generalDAO.saveOrUpdateIsNew(entity);
     }
 
     @Override
-    public boolean[] save(T... entities) {
+    public boolean[] saveOrUpdateIsNew(T... entities) {
         debug("Save entities type[{}].", getClassOfT());
-        return generalDAO.save(entities);
+        return generalDAO.saveOrUpdateIsNew(entities);
     }
-
+    
+    @Override
+    public void update(T entity) {
+        debug("Update entity type {}.", getClassOfT());
+        generalDAO.update(entity);
+    }
+    
     @Override
     public boolean remove(T entity) {
         debug("Remove entity type[{}].", getClassOfT());

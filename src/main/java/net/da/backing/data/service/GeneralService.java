@@ -53,15 +53,21 @@ public class GeneralService
     }
 
     @Override
-    public boolean save(Object entity) {
+    public boolean saveOrUpdateIsNew(Object entity) {
         debug("Save entity type[{}].", (entity != null ? entity.getClass() : "entity is null"));
-        return generalDAO.save(entity);
+        return generalDAO.saveOrUpdateIsNew(entity);
     }
 
     @Override
-    public boolean[] save(Object... entities) {
+    public boolean[] saveOrUpdateIsNew(Object... entities) {
         debug("Save entities type[{}].", (entities.length != 0 ? entities[0].getClass() : "list is empty"));
-        return generalDAO.save(entities);
+        return generalDAO.saveOrUpdateIsNew(entities);
+    }
+    
+    @Override
+    public void update(Object entity){
+        debug("Save entity type[{}].", (entity != null ? entity.getClass() : "entity is null"));
+        generalDAO.update(entity);
     }
 
     @Override

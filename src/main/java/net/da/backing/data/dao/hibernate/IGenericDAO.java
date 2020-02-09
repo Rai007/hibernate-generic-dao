@@ -111,7 +111,7 @@ public interface IGenericDAO<T, ID extends Serializable> {
      * @param entity
      * @return <code>true</code> if create; <code>false</code> if update.
      */
-    public boolean save(T entity);
+    public boolean saveOrUpdateIsNew(T entity);
 
     /**
      * <p>
@@ -128,8 +128,22 @@ public interface IGenericDAO<T, ID extends Serializable> {
      * @param entities
      * @return 
      */
-    public boolean[] save(T... entities);
+    public boolean[] saveOrUpdateIsNew(T... entities);
 
+    
+    /**
+     * <p>
+     * If the id of entity is in datastore, update corresponding entity with
+     * the properties of this entity
+     * If there is a persistent instance with the same id, an
+     * exception is thrown. This operation cascades to associated instances if
+     * the association is mapped with cascade="save-update".
+     * 
+     * @param entity
+     */
+    public void update(T entity);
+    
+    
     /**
      * Remove the specified entity from the datastore.
      * 

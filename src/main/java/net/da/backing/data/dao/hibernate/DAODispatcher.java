@@ -63,58 +63,58 @@ public class DAODispatcher extends BaseDAODispatcher implements IGeneralDAO {
 
     @Override
     public int count(ISearch search) {
-            Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).count(search);
-                    } else {
-                            return (Integer) callMethod(specificDAO, "count", search);
-                    }
+        Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).count(search);
             } else {
-                    return generalDAO.count(search);
+                return (Integer) callMethod(specificDAO, "count", search);
             }
+        } else {
+            return generalDAO.count(search);
+        }
     }
 
     @Override
     public <T> T find(Class<T> type, Serializable id) {
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return (T) ((IGenericDAO) specificDAO).find(id);
-                    } else {
-                            return (T) callMethod(specificDAO, "find", id);
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return (T) ((IGenericDAO) specificDAO).find(id);
             } else {
-                    return (T) generalDAO.find(type, id);
+                return (T) callMethod(specificDAO, "find", id);
             }
+        } else {
+            return (T) generalDAO.find(type, id);
+        }
     }
 
     @Override
     public <T> T[] find(Class<T> type, Serializable... ids) {
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return (T[]) ((IGenericDAO) specificDAO).find(ids);
-                    } else {
-                            return (T[]) callMethod(specificDAO, "find", (Object[]) ids);
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return (T[]) ((IGenericDAO) specificDAO).find(ids);
             } else {
-                    return (T[]) generalDAO.find(type, ids);
+                return (T[]) callMethod(specificDAO, "find", (Object[]) ids);
             }
+        } else {
+            return (T[]) generalDAO.find(type, ids);
+        }
     }
 
     @Override
     public <T> List<T> findAll(Class<T> type) {
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).findAll();
-                    } else {
-                            return (List) callMethod(specificDAO, "findAll");
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).findAll();
             } else {
-                    return generalDAO.findAll(type);
+                return (List) callMethod(specificDAO, "findAll");
             }
+        } else {
+            return generalDAO.findAll(type);
+        }
     }
 
     /**
@@ -122,197 +122,211 @@ public class DAODispatcher extends BaseDAODispatcher implements IGeneralDAO {
      */
     @Override
     public void flush() {
-            throw new DAODispatcherException(
-                            "The flush() method cannot be used with DAODispatcher because it could does not include a Class type to dispatch to. Use flush(Class<?>).");
+        throw new DAODispatcherException(
+                        "The flush() method cannot be used with DAODispatcher because it could does not include a Class type to dispatch to. Use flush(Class<?>).");
     }
 
     public void flush(Class<?> klass) {
-            Object specificDAO = getSpecificDAO(klass.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            ((IGenericDAO) specificDAO).flush();
-                    } else {
-                            callMethod(specificDAO, "flush");
-                    }
+        Object specificDAO = getSpecificDAO(klass.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                ((IGenericDAO) specificDAO).flush();
             } else {
-                    generalDAO.flush();
+                callMethod(specificDAO, "flush");
             }
+        } else {
+            generalDAO.flush();
+        }
     }
 
     @Override
     public <T> T getReference(Class<T> type, Serializable id) {
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return (T) ((IGenericDAO) specificDAO).getReference(id);
-                    } else {
-                            return (T) callMethod(specificDAO, "getReference", id);
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return (T) ((IGenericDAO) specificDAO).getReference(id);
             } else {
-                    return (T) generalDAO.getReference(type, id);
+                return (T) callMethod(specificDAO, "getReference", id);
             }
+        } else {
+            return (T) generalDAO.getReference(type, id);
+        }
     }
 
     @Override
     public <T> T[] getReferences(Class<T> type, Serializable... ids) {
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return (T[]) ((IGenericDAO) specificDAO).getReferences(ids);
-                    } else {
-                            return (T[]) callMethod(specificDAO, "getReferences", (Object[]) ids);
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return (T[]) ((IGenericDAO) specificDAO).getReferences(ids);
             } else {
-                    return generalDAO.getReferences(type, ids);
+                return (T[]) callMethod(specificDAO, "getReferences", (Object[]) ids);
             }
+        } else {
+            return generalDAO.getReferences(type, ids);
+        }
     }
 
     @Override
     public boolean isAttached(Object entity) {
-            Object specificDAO = getSpecificDAO(entity.getClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).isAttached(entity);
-                    } else {
-                            return (Boolean) callMethod(specificDAO, "isAttached", entity);
-                    }
+        Object specificDAO = getSpecificDAO(entity.getClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).isAttached(entity);
             } else {
-                    return generalDAO.isAttached(entity);
+                return (Boolean) callMethod(specificDAO, "isAttached", entity);
             }
+        } else {
+            return generalDAO.isAttached(entity);
+        }
     }
 
     @Override
     public void refresh(Object... entities) {
-            Class<?> type = getUniformArrayType(entities);
-            if (type == null) return;
-            if (type.equals(Object.class)) {
-                    //There are several different types of entities
-                    for (Object entity : entities) {
-                            refresh(entity);
-                    }
-                    return;
-            }		
-
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            ((IGenericDAO) specificDAO).refresh(entities);
-                    } else {
-                            callMethod(specificDAO, "refresh", entities);
-                    }
-            } else {
-                    generalDAO.refresh(entities);
+        Class<?> type = getUniformArrayType(entities);
+        if (type == null) return;
+        if (type.equals(Object.class)) {
+            //There are several different types of entities
+            for (Object entity : entities) {
+                refresh(entity);
             }
+            return;
+        }		
+
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                ((IGenericDAO) specificDAO).refresh(entities);
+            } else {
+                callMethod(specificDAO, "refresh", entities);
+            }
+        } else {
+            generalDAO.refresh(entities);
+        }
     }
 
     @Override
     public boolean remove(Object entity) {
-            Object specificDAO = getSpecificDAO(entity.getClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).remove(entity);
-                    } else {
-                            return (Boolean) callMethod(specificDAO, "remove", entity);
-                    }
+        Object specificDAO = getSpecificDAO(entity.getClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).remove(entity);
             } else {
-                    return generalDAO.remove(entity);
+                return (Boolean) callMethod(specificDAO, "remove", entity);
             }
+        } else {
+            return generalDAO.remove(entity);
+        }
     }
 
     @Override
     public void remove(Object... entities) {
-            Class<?> type = getUniformArrayType(entities);
-            if (type == null) return;
-            if (type.equals(Object.class)) {
-                    //There are several different types of entities
-                    for (Object entity : entities) {
-                            remove(entity);
-                    }
-                    return;
+        Class<?> type = getUniformArrayType(entities);
+        if (type == null) return;
+        if (type.equals(Object.class)) {
+            //There are several different types of entities
+            for (Object entity : entities) {
+                remove(entity);
             }
+            return;
+        }
 
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            ((IGenericDAO) specificDAO).remove(entities);
-                    } else {
-                            callMethod(specificDAO, "remove", entities);
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                ((IGenericDAO) specificDAO).remove(entities);
             } else {
-                    generalDAO.remove(entities);
+                callMethod(specificDAO, "remove", entities);
             }
+        } else {
+            generalDAO.remove(entities);
+        }
     }
 
     @Override
     public boolean removeById(Class<?> type, Serializable id) {
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).removeById(id);
-                    } else {
-                            return (Boolean) callMethod(specificDAO, "removeById", id);
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                    return ((IGenericDAO) specificDAO).removeById(id);
             } else {
-                    return generalDAO.removeById(type, id);
+                    return (Boolean) callMethod(specificDAO, "removeById", id);
             }
+        } else {
+            return generalDAO.removeById(type, id);
+        }
     }
 
     @Override
     public void removeByIds(Class<?> type, Serializable... ids) {
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            ((IGenericDAO) specificDAO).removeByIds(ids);
-                    } else {
-                            callMethod(specificDAO, "removeByIds", (Object[]) ids);
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                    ((IGenericDAO) specificDAO).removeByIds(ids);
             } else {
-                    generalDAO.removeByIds(type, ids);
+                    callMethod(specificDAO, "removeByIds", (Object[]) ids);
             }
+        } else {
+            generalDAO.removeByIds(type, ids);
+        }
     }
 
     @Override
-    public boolean save(Object entity) {
-            Object specificDAO = getSpecificDAO(entity.getClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).save(entity);
-                    } else {
-                            return (Boolean) callMethod(specificDAO, "save", entity);
-                    }
+    public boolean saveOrUpdateIsNew(Object entity) {
+        Object specificDAO = getSpecificDAO(entity.getClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).saveOrUpdateIsNew(entity);
             } else {
-                    return generalDAO.save(entity);
+                return (Boolean) callMethod(specificDAO, "save", entity);
             }
+        } else {
+            return generalDAO.saveOrUpdateIsNew(entity);
+        }
     }
 
     @Override
-    public boolean[] save(Object... entities) {
-            if (entities == null)
-                    return null;
-            Class<?> type = getUniformArrayType(entities);
-            if (type == null)
-                    return new boolean[entities.length];
-            if (type.equals(Object.class)) {
-                    //There are several different types of entities
-                    boolean[] isNew = new boolean[entities.length];
-                    for (int i = 0; i < entities.length; i++) {
-                            isNew[i] = save(entities[i]);
-                    }
-                    return isNew;
+    public boolean[] saveOrUpdateIsNew(Object... entities) {
+        if (entities == null)
+                return null;
+        Class<?> type = getUniformArrayType(entities);
+        if (type == null)
+                return new boolean[entities.length];
+        if (type.equals(Object.class)) {
+            //There are several different types of entities
+            boolean[] isNew = new boolean[entities.length];
+            for (int i = 0; i < entities.length; i++) {
+                isNew[i] = saveOrUpdateIsNew(entities[i]);
             }
+            return isNew;
+        }
 
-            Object specificDAO = getSpecificDAO(type.getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).save(entities);
-                    } else {
-                            return (boolean[]) callMethod(specificDAO, "save", entities);
-                    }
+        Object specificDAO = getSpecificDAO(type.getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).saveOrUpdateIsNew(entities);
             } else {
-                    return generalDAO.save(entities);
+                return (boolean[]) callMethod(specificDAO, "saveOrUpdateIsNew", entities);
             }
+        } else {
+            return generalDAO.saveOrUpdateIsNew(entities);
+        }
     }
 
+    @Override
+    public void update(Object entity) {
+        Object specificDAO = getSpecificDAO(entity.getClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                ((IGenericDAO) specificDAO).update(entity);
+            } else {
+                callMethod(specificDAO, "update", entity);
+            }
+        } else {
+            generalDAO.update(entity);
+        }
+    }
+    
     @Override
     public List search(ISearch search) {
         Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
@@ -329,58 +343,58 @@ public class DAODispatcher extends BaseDAODispatcher implements IGeneralDAO {
 
     @Override
     public SearchResult searchAndCount(ISearch search) {
-            Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).searchAndCount(search);
-                    } else {
-                            return (SearchResult) callMethod(specificDAO, "searchAndCount", search);
-                    }
+        Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).searchAndCount(search);
             } else {
-                    return generalDAO.searchAndCount(search);
+                return (SearchResult) callMethod(specificDAO, "searchAndCount", search);
             }
+        } else {
+            return generalDAO.searchAndCount(search);
+        }
     }
 
     @Override
     public Object searchUnique(ISearch search) {
-            Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).searchUnique(search);
-                    } else {
-                            return callMethod(specificDAO, "searchUnique", search);
-                    }
+        Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).searchUnique(search);
             } else {
-                    return generalDAO.searchUnique(search);
+                return callMethod(specificDAO, "searchUnique", search);
             }
+        } else {
+            return generalDAO.searchUnique(search);
+        }
     }
 
     @Override
     public Filter getFilterFromExample(Object example) {
-            Object specificDAO = getSpecificDAO(example.getClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).getFilterFromExample(example);
-                    } else {
-                            return (Filter) callMethod(specificDAO, "getFilterFromExample", example);
-                    }
+        Object specificDAO = getSpecificDAO(example.getClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                    return ((IGenericDAO) specificDAO).getFilterFromExample(example);
             } else {
-                    return generalDAO.getFilterFromExample(example);
+                    return (Filter) callMethod(specificDAO, "getFilterFromExample", example);
             }
+        } else {
+            return generalDAO.getFilterFromExample(example);
+        }
     }
 
     @Override
     public Filter getFilterFromExample(Object example, ExampleOptions options) {
-            Object specificDAO = getSpecificDAO(example.getClass().getName());
-            if (specificDAO != null) {
-                    if (specificDAO instanceof IGenericDAO) {
-                            return ((IGenericDAO) specificDAO).getFilterFromExample(example, options);
-                    } else {
-                            return (Filter) callMethod(specificDAO, "getFilterFromExample", example, options);
-                    }
+        Object specificDAO = getSpecificDAO(example.getClass().getName());
+        if (specificDAO != null) {
+            if (specificDAO instanceof IGenericDAO) {
+                return ((IGenericDAO) specificDAO).getFilterFromExample(example, options);
             } else {
-                    return generalDAO.getFilterFromExample(example, options);
+                return (Filter) callMethod(specificDAO, "getFilterFromExample", example, options);
             }
+        } else {
+            return generalDAO.getFilterFromExample(example, options);
+        }
     }
 
 }
